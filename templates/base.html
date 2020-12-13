@@ -26,16 +26,8 @@
   </div>
   <div class="w3-bar-block">
 	<a href="{% url 'home' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Home</a>
-	<a href="{% url 'getusertweet' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Get User Tweets</a>
-	 {% comment %} <a href="{% url 'getmentiontweets' %}" onclick="w3_close()" 
-	  class="w3-bar-item w3-button w3-hover-white">Get Mention Tweets</a>
-	<a href="{% url 'getidbasedtweets' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
-		Get Id based Tweet</a> {% endcomment %}
+	<a href="{% url 'getusertweet' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Get {{user.username}} Tweets</a>
 	<a href="{% url 'getfriends' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Get Friends</a>
-	{% comment %} <a href="{% url 'getfollowers' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Get Followers</a>
-	<a href="{% url 'getaccountsettings' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Account Settings</a>
-	<a href="{% url 'getprivacypolicy' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Twitter Privacy Policy</a>
-	<a href="{% url 'gettwitterterms' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Twitter Terms of Service</a> {% endcomment %}
   </div>
 </nav>
 
