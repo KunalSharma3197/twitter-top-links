@@ -16,7 +16,7 @@
             {% for twee in tweet %}
             <tr>
                 <td>{{ twee.id }}</td>
-                <td>{{ twee.text }}</td>
+                <td><a class="twitter-timeline"href="https://twitter.com/{{ user.username }}/status/{{ twee.id }}"data-tweet-limit="3">{{ twee.text }}</a></td>
             </tr>
             {% endfor %}
        </table>
