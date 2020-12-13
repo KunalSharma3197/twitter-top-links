@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+  <html>
+  <head>
+  </head>
+  <body>
+  <div class="w3-container" style="margin-top:30px" id="GetUserTweets">
+  <h1 class="w3-xxlarge w3-text-indigo"><b>Get Status User Timeline</b></h1>
+  <b class="w3-large">Returns a collection of the most recent  Tweets posted by the user @{{user.username}}</b><br><br>
+     <p>
+       <table>
+           <tr>
+                <th class="w3-dark-grey">Tweet ID</th>
+                <th class="w3-dark-grey">User Tweet</th>
+            </tr>
+            {% for twee in tweet %}
+            <tr>
+                <td>{{ twee.id }}</td>
+                <td>{{ twee.text }}</td>
+            </tr>
+            {% endfor %}
+       </table>
+     </p>
+   </div>
+  </body>
+</html>
+{% endblock %}
