@@ -1,5 +1,4 @@
 from django.db import models
-import tables
 
 # Create your models here.
 # Model for storing the current user
