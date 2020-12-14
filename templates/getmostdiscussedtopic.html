@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block nav-global %}{% endblock %}
 (% {% block  content %} 
-    <h3> The hottest topic right now is {{topic}}!</h3>
+    <h3> The hottest 10 topics right now are </h3><br>
+    {% for t in topics %}
+        <h3> {{t}} </h3>
+    {% endfor %}
 {% endblock %} %)

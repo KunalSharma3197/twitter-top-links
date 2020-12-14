@@ -93,23 +93,26 @@ def pull_all_tweets(request) :
         print("status exception get_user_tweets", resp.status)
         return HttpResponseServerError(twitter_exception)
     else:
-        # frequent_topics = {}
         for tweet in tweets :
             # print(tweet['entities']['hashtags'][0]['text']) 
+            # print(tweet['user']['id'])
+            # print(tweet['user']['name'])
             try :
                 hashtag = ""
                 if len(tweet['entities']['hashtags']) > 0 :
                     hashtag = tweet['entities']['hashtags'][0]['text']
                 obj = Tweet.objects.get(tweet_id = tweet['id'], tweet_data = tweet['text']
-                    , tweet_hashtag = hashtag)
+                    , tweet_hashtag = hashtag, tweet_user_id = tweet['user']['id']
+                    , tweet_user_name = tweet['user']['name'])
             except Tweet.DoesNotExist :
                 obj = Tweet(tweet_id = tweet['id'], tweet_data = tweet['text']
-                    , tweet_hashtag = hashtag)
+                    , tweet_hashtag = hashtag, tweet_user_id = tweet['user']['id']
+                    , tweet_user_name = tweet['user']['name'])
                 obj.save()
-            # print(hashtag)
         print("status working get_user_tweets", resp.status)
         return render(request, 'getalltweets.html', context)
      
+# returns a list of current most discussed topics
 def get_most_discussed_topic(request) :
     entries = Tweet.objects.values('tweet_hashtag')
     frequency_map = {}
@@ -120,7 +123,35 @@ def get_most_discussed_topic(request) :
                 frequency_map[key] += 1
             else :
                 frequency_map[key] = 1
-    topic = max(frequency_map, key = frequency_map.get)
-    context = {'topic' : topic}
-    print(context)
+    topics = []
+    count = 0
+    for w in sorted(frequency_map, key=frequency_map.get, reverse=True) :
+        if count == 10 :
+            break
+        topics.append(w)
+        count += 1
+    print(len(topics))
+    context = {'topics' : topics}
     return render(request, 'getmostdiscussedtopic.html', context)
+
+# returns the person with most tweets
+def get_person_with_most_tweets(request) :
+    entries = Tweet.objects.values('tweet_user_id')
+    frequency_map = {}
+    map = {}
+
+    for entry in entries :
+        if len(entry['tweet_user_id']) > 0 :
+            key = entry['tweet_user_id']
+            if key in frequency_map :
+                frequency_map[key] += 1
+            else :
+                frequency_map[key] = 1
+    user_id = max(frequency_map, key = frequency_map.get)
+    querry_set = Tweet.objects.filter(tweet_user_id = user_id).values('tweet_user_name')
+    for q in querry_set :
+        user_name = q['tweet_user_name']
+        break
+    context = {'user_name' : user_name}
+    # print(context)
+    return render(request, 'getpersonwithmosttweets.html', context)

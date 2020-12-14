@@ -1,4 +1,5 @@
 from django.db import models
+import tables
 
 # Create your models here.
 # Model for storing the current user
@@ -22,4 +23,6 @@ class Tweet(models.Model) :
     tweet_id = models.CharField(max_length = 50)
     tweet_data = models.CharField(max_length = 100)
     tweet_hashtag = models.CharField(max_length = 100)
+    tweet_user_id = models.CharField(max_length = 100)
+    tweet_user_name = models.CharField(max_length = 100)
     
