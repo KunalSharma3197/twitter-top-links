@@ -44,10 +44,25 @@ def get_friends(request):
     #           '\nFavourites Count : ', friends['favourites_count'])
 
     context = {'friends': friends_list['users']}
-
+    
     if resp.status != 200:
         print("status exception get_friends", resp.status)
         return HttpResponseServerError(twitter_exception)
     else:
         print("status working get_friends", resp.status)
         return render(request, 'getfriends.html', context)
+
+# Pulls tweets over last 7 days from user and friends 
+def pull_all_tweets(request) :
+    timeline_endpoint = "https://api.twitter.com/1.1/statuses/home_timeline.json?screen_name=%s Tweet&count=200"%(request.user)
+    resp, tweets = call_twitter_api(timeline_endpoint)
+    context = {'tweet': tweets}
+    # print(tweets)
+    if resp.status != 200:
+        print("status exception get_user_tweets", resp.status)
+        return HttpResponseServerError(twitter_exception)
+    else:
+        print("status working get_user_tweets", resp.status)
+        return render(request, 'getalltweets.html', context)
+        
+

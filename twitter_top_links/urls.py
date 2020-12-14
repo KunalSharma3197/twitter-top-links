@@ -31,4 +31,5 @@ urlpatterns = [
     url(r'^oauth/', include('social_django.urls', namespace='social')),
     path('getusertweet/', views.get_user_tweets, name='getusertweet'),
     path('getfriends', views.get_friends, name='getfriends'),
+    path('getalltweets', views.pull_all_tweets, name='getalltweets'),
 ]
