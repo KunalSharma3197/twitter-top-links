@@ -9,7 +9,6 @@ from twitter_top_links.settings import SOCIAL_AUTH_TWITTER_SECRET as secret_key
 from toplinks.models import Friend
 from toplinks.models import User
 from toplinks.models import Tweet
-
 # Create your views here.
 
 twitter_exception="<html><body background=#dddddd font-family:sans-serif><h1> Something is not happening!</h1></body></html>"
@@ -90,18 +89,38 @@ def pull_all_tweets(request) :
     timeline_endpoint = "https://api.twitter.com/1.1/statuses/home_timeline.json?screen_name=%s Tweet&count=200"%(request.user)
     resp, tweets = call_twitter_api(timeline_endpoint)
     context = {'tweet': tweets}
-    # print(tweets)
     if resp.status != 200:
         print("status exception get_user_tweets", resp.status)
         return HttpResponseServerError(twitter_exception)
     else:
+        # frequent_topics = {}
         for tweet in tweets :
+            # print(tweet['entities']['hashtags'][0]['text']) 
             try :
-                obj = Tweet.objects.get(tweet_id = tweet['id'], tweet_data = tweet['text'])
+                hashtag = ""
+                if len(tweet['entities']['hashtags']) > 0 :
+                    hashtag = tweet['entities']['hashtags'][0]['text']
+                obj = Tweet.objects.get(tweet_id = tweet['id'], tweet_data = tweet['text']
+                    , tweet_hashtag = hashtag)
             except Tweet.DoesNotExist :
-                obj = Tweet(tweet_id = tweet['id'], tweet_data = tweet['text'])
+                obj = Tweet(tweet_id = tweet['id'], tweet_data = tweet['text']
+                    , tweet_hashtag = hashtag)
                 obj.save()
+            # print(hashtag)
         print("status working get_user_tweets", resp.status)
         return render(request, 'getalltweets.html', context)
-        
-
+     
+def get_most_discussed_topic(request) :
+    entries = Tweet.objects.values('tweet_hashtag')
+    frequency_map = {}
+    for entry in entries :
+        if len(entry['tweet_hashtag']) > 0 :
+            key = entry['tweet_hashtag']
+            if key in frequency_map :
+                frequency_map[key] += 1
+            else :
+                frequency_map[key] = 1
+    topic = max(frequency_map, key = frequency_map.get)
+    context = {'topic' : topic}
+    print(context)
+    return render(request, 'getmostdiscussedtopic.html', context)

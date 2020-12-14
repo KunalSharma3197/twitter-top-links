@@ -32,4 +32,5 @@ urlpatterns = [
     path('getusertweet/', views.get_user_tweets, name='getusertweet'),
     path('getfriends', views.get_friends, name='getfriends'),
     path('getalltweets', views.pull_all_tweets, name='getalltweets'),
+    path('getmostdiscussedtopic', views.get_most_discussed_topic, name='getmostdiscussedtopic'),
 ]

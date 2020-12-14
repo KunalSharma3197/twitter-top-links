@@ -12,11 +12,13 @@
            <tr>
                 <th class="w3-dark-grey">Tweet ID</th>
                 <th class="w3-dark-grey">User Tweet</th>
+                {% comment %} <th class="w3-dark-grey">HashTag</th> {% endcomment %}
             </tr>
             {% for twee in tweet %}
             <tr>
                 <td>{{ twee.id }}</td>
                 <td><a class="twitter-timeline"href="https://twitter.com/{{ twee.user.screen_name }}/status/{{ twee.id }}"data-tweet-limit="3">{{ twee.text }}</a></td>
+                {% comment %} <td>{{twee.entities.hashtags.}}</td> {% endcomment %}
             </tr>
             {% endfor %}
        </table>
