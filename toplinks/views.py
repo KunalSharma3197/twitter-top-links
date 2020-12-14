@@ -6,6 +6,9 @@ import oauth2 as oauth
 from django.http import HttpResponseServerError
 from twitter_top_links.settings import SOCIAL_AUTH_TWITTER_KEY as c_key
 from twitter_top_links.settings import SOCIAL_AUTH_TWITTER_SECRET as secret_key
+from toplinks.models import Friend
+from toplinks.models import User
+from toplinks.models import Tweet
 
 # Create your views here.
 
@@ -28,6 +31,12 @@ def get_user_tweets(request) :
         print("status exception get_user_tweets", resp.status)
         return HttpResponseServerError(twitter_exception)
     else:
+        for tweet in tweets :
+            try :
+                obj =  User.objects.get(user_id = tweet['id'], user_tweet = tweet['text'])
+            except User.DoesNotExist :
+                obj =  User(user_id = tweet['id'], user_tweet = tweet['text'])
+                obj.save()
         print("status working get_user_tweets", resp.status)
         return render(request, 'getusertweet.html', context)
 
@@ -49,6 +58,30 @@ def get_friends(request):
         print("status exception get_friends", resp.status)
         return HttpResponseServerError(twitter_exception)
     else:
+        for friends in friends_list['users'] :
+            try :
+                obj = Friend.objects.get(
+                    friend_id = friends['id'],
+                    friend_name = friends['name'],
+                    friend_screen_name = friends['screen_name'],
+                    friend_location = friends['location'],
+                    friend_followers_count = friends['followers_count'],
+                    friend_friend_count = friends['friends_count'],
+                    friend_listed_count = friends['listed_count'],
+                    friend_favourite_count = friends['favourites_count']
+                )
+            except Friend.DoesNotExist :
+                obj = Friend(
+                    friend_id = friends['id'],
+                    friend_name = friends['name'],
+                    friend_screen_name = friends['screen_name'],
+                    friend_location = friends['location'],
+                    friend_followers_count = friends['followers_count'],
+                    friend_friend_count = friends['friends_count'],
+                    friend_listed_count = friends['listed_count'],
+                    friend_favourite_count = friends['favourites_count']
+                )
+                obj.save()
         print("status working get_friends", resp.status)
         return render(request, 'getfriends.html', context)
 
@@ -62,6 +95,12 @@ def pull_all_tweets(request) :
         print("status exception get_user_tweets", resp.status)
         return HttpResponseServerError(twitter_exception)
     else:
+        for tweet in tweets :
+            try :
+                obj = Tweet.objects.get(tweet_id = tweet['id'], tweet_data = tweet['text'])
+            except Tweet.DoesNotExist :
+                obj = Tweet(tweet_id = tweet['id'], tweet_data = tweet['text'])
+                obj.save()
         print("status working get_user_tweets", resp.status)
         return render(request, 'getalltweets.html', context)
         
