@@ -1,1 +1,1 @@
-web: gunicorn twitter_top_links.wsgi
+web: gunicorn chdir twitter_top_links/twitter_top_links twitter_top_links.wsgi
