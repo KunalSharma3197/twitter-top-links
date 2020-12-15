@@ -34,4 +34,5 @@ urlpatterns = [
     path('getalltweets', views.pull_all_tweets, name='getalltweets'),
     path('getmostdiscussedtopic', views.get_most_discussed_topic, name='getmostdiscussedtopic'),
     path('getpersonwithmosttweets', views.get_person_with_most_tweets, name='getpersonwithmosttweets'),
+    path("o/", include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
