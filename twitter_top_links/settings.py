@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
+import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -136,3 +136,5 @@ STATIC_URL = '/static/'
 
 SOCIAL_AUTH_TWITTER_KEY = 'Jr5rSa31K0zAgT3pDYxTFlzw1'
 SOCIAL_AUTH_TWITTER_SECRET = 'vJDTSvLkL5R3uoep58ybUW0zopYUtXKeY9A2T8EEpnl4Cz4zMJ'
+# Activate Django-Heroku.
+django_heroku.settings(locals())
