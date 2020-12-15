@@ -3,6 +3,7 @@ from django.http import HttpResponse
 import requests
 import json
 import oauth2 as oauth
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseServerError
 from twitter_top_links.settings import SOCIAL_AUTH_TWITTER_KEY as c_key
 from twitter_top_links.settings import SOCIAL_AUTH_TWITTER_SECRET as secret_key
@@ -21,6 +22,7 @@ def call_twitter_api(endpoint):
     return response, json.loads(data)
 
 # Get users timeline 
+@login_required
 def get_user_tweets(request) :
     username = request.user
     timeline_endpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=%s Tweet&count=20"%(username)
@@ -40,6 +42,7 @@ def get_user_tweets(request) :
         return render(request, 'getusertweet.html', context)
 
 # Get Friends list
+@login_required
 def get_friends(request):
     timeline_endpoint = "https://api.twitter.com/1.1/friends/list.json?cursor=-1&screen_name=%s "  \
                         "Tweet&skip_status=true&include_user_entities=false "%(request.user)
@@ -85,6 +88,7 @@ def get_friends(request):
         return render(request, 'getfriends.html', context)
 
 # Pulls tweets over last 7 days from user and friends 
+@login_required
 def pull_all_tweets(request) :
     timeline_endpoint = "https://api.twitter.com/1.1/statuses/home_timeline.json?screen_name=%s Tweet&count=200"%(request.user)
     resp, tweets = call_twitter_api(timeline_endpoint)
@@ -113,8 +117,12 @@ def pull_all_tweets(request) :
         return render(request, 'getalltweets.html', context)
      
 # returns a list of current most discussed topics
+@login_required
 def get_most_discussed_topic(request) :
     entries = Tweet.objects.values('tweet_hashtag')
+    topics = []
+    if entries.exists() == False :
+        return render(request, 'getmostdiscussedtopic.html', {'topics' : topics})
     frequency_map = {}
     for entry in entries :
         if len(entry['tweet_hashtag']) > 0 :
@@ -123,7 +131,7 @@ def get_most_discussed_topic(request) :
                 frequency_map[key] += 1
             else :
                 frequency_map[key] = 1
-    topics = []
+    
     count = 0
     for w in sorted(frequency_map, key=frequency_map.get, reverse=True) :
         if count == 10 :
@@ -135,11 +143,13 @@ def get_most_discussed_topic(request) :
     return render(request, 'getmostdiscussedtopic.html', context)
 
 # returns the person with most tweets
+@login_required
 def get_person_with_most_tweets(request) :
     entries = Tweet.objects.values('tweet_user_id')
     frequency_map = {}
     map = {}
-
+    if entries.exists() == False :
+        return render(request, 'getpersonwithmosttweets.html', {'user_name' : 'No one'})
     for entry in entries :
         if len(entry['tweet_user_id']) > 0 :
             key = entry['tweet_user_id']
