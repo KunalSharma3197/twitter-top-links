@@ -1,0 +1,6 @@
+django
+django-heroku
+social-auth-app-django
+gunicorn
+django-oauth-toolkit
+django-cors-middleware
