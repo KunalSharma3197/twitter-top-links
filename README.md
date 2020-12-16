@@ -1,6 +1,8 @@
 # twitter-top-links
 To start the server :
+
 Open the root project directory
+
 In command line write :
 python manage.py runserver
 
